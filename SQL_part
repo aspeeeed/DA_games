@@ -1,0 +1,123 @@
+---- Выясняем TOP 10 игр из этой подборки 
+
+select 
+	title, 
+	rating,
+	year 
+from second_table st 
+order by rating DESC 
+limit 10
+
+
+---- Проверяем есть ли там еще игры с рейтингом 4.6
+select 
+	title, 
+	rating,
+	year 
+from second_table st 
+order by rating DESC 
+limit 20
+
+---- Посмотрим сколько ревьюеров было у этих игр 
+select 
+	title, 
+	rating,
+	year,
+	number_of_reviews
+from second_table st 
+order by rating desc 
+limit 17
+
+--- Удивляемся нашему "топу"
+--- Рассчитываем седнее количество ревьюеров для этой подборки 
+select 
+round(avg(number_of_reviews)) as avg_number_of_reviews
+from second_table st 
+
+--- Вводим новый критерий для выборки TOP 10 
+select 
+title, 
+	rating,
+	year,
+	number_of_reviews
+from second_table st 
+where number_of_reviews > 2796
+order by rating desc 
+limit 10
+
+
+-- Пригодность для анализа старых игр 
+
+--- Какая медиана по году у этой подборки?
+select 
+round(median(year)) as median_year
+from second_table st 
+
+--- Сколько старых игр и новых игр есть в подборке 
+select 
+count(title)
+from second_table st 
+where year > 2013
+
+select 
+count(title)
+from second_table st 
+where year < 2013
+
+--- Медиана по году относительно старых игр 
+select 
+round(median(year)) as median_year
+from second_table st 
+where year < 2013
+
+--- медиана по году для новых игр 
+select 
+round(median(year)) as median_year
+from second_table st 
+where year > 2013
+
+--- Ищем команду, которая выпустила больше всего игр (новые игры)
+select 
+max(team) as title_team,
+count(team) as number_of_releases
+from second_table st 
+where year > 2013
+GROUP BY (team) order by number_of_releases desc
+
+--- Ищем команду, которая выпустила больше всего игр (старые игры)
+select 
+max(team) as title_team,
+count(team) as number_of_releases
+from second_table st 
+where year < 2013
+GROUP BY (team) order by number_of_releases desc
+
+
+--- Ищем команду, которая выпустила больше всего игр (вся выборка)
+select 
+max(team) as title_team,
+count(team) as number_of_releases
+from second_table st 
+GROUP BY (team) order by number_of_releases desc
+
+--- Смотрим рекордсмена по количеству добавлений в wishlist
+select 
+title,
+team,
+max(wishlist)
+from second_table st 
+
+--- Смотрим рекордсмена по количеству скачиваний (всего)
+select 
+title,
+team,
+max(times_listed)
+from second_table st 
+
+--- Смотрим рекордсмена по количеству реальных игроков 
+
+select 
+title,
+team,
+max(plays + playing) as real_players
+from second_table st 
